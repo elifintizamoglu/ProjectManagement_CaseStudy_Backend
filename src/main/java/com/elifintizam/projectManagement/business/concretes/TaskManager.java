@@ -1,12 +1,15 @@
 package com.elifintizam.projectManagement.business.concretes;
 
 import com.elifintizam.projectManagement.business.abstracts.TaskService;
+import com.elifintizam.projectManagement.business.constants.TaskMessages;
 import com.elifintizam.projectManagement.business.dtos.requests.task.CreateTaskRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.task.UpdateTaskRequest;
 import com.elifintizam.projectManagement.business.dtos.responses.task.CreateTaskResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.task.GetAllTasksResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.task.GetTaskByIdResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.task.UpdateTaskResponse;
+import com.elifintizam.projectManagement.business.rules.TaskBusinessRules;
+import com.elifintizam.projectManagement.core.utilities.exceptions.types.BusinessException;
 import com.elifintizam.projectManagement.core.utilities.mapping.ModelMapperService;
 import com.elifintizam.projectManagement.dataAccess.abstracts.TaskRepository;
 import com.elifintizam.projectManagement.entities.concretes.Task;
@@ -23,11 +26,14 @@ public class TaskManager implements TaskService {
 
     private TaskRepository taskRepository;
     private ModelMapperService modelMapperService;
+    private TaskBusinessRules businessRules;
 
     @Override
-    public CreateTaskResponse addTask(CreateTaskRequest createTaskRequest) {
+    public CreateTaskResponse addTask(CreateTaskRequest request) {
 
-        Task task = modelMapperService.forRequest().map(createTaskRequest, Task.class);
+        businessRules.taskTitleCanNotBeDuplicated(request.getTitle(), request.getProjectId());
+
+        Task task = modelMapperService.forRequest().map(request, Task.class);
         task.setCreatedDate(LocalDateTime.now());
         task.setId(0);
         taskRepository.save(task);
@@ -50,15 +56,17 @@ public class TaskManager implements TaskService {
     @Override
     public void deleteTaskById(int id) {
 
+        businessRules.isTaskExists(id);
         taskRepository.deleteById(id);
     }
 
     @Override
-    public UpdateTaskResponse updateTaskById(int id, UpdateTaskRequest updateTaskRequest) {
+    public UpdateTaskResponse updateTaskById(int id, UpdateTaskRequest request) {
 
-        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("TaskNotFound"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(TaskMessages.TaskNotFound));
 
-        Task updatedTask = modelMapperService.forRequest().map(updateTaskRequest, Task.class);
+        businessRules.taskTitleCanNotBeDuplicated(request.getTitle(), request.getProjectId());
+        Task updatedTask = modelMapperService.forRequest().map(request, Task.class);
 
         task.setProject(updatedTask.getProject());
         task.setTitle(updatedTask.getTitle());
@@ -74,7 +82,7 @@ public class TaskManager implements TaskService {
 
     @Override
     public GetTaskByIdResponse getTaskById(int id) {
-        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("TaskNotFound"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(TaskMessages.TaskNotFound));
 
         GetTaskByIdResponse response = modelMapperService.forResponse().map(task, GetTaskByIdResponse.class);
         return response;

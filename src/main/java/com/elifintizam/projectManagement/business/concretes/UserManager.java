@@ -1,9 +1,11 @@
 package com.elifintizam.projectManagement.business.concretes;
 
 import com.elifintizam.projectManagement.business.abstracts.UserService;
+import com.elifintizam.projectManagement.business.constants.UserMessages;
 import com.elifintizam.projectManagement.business.dtos.requests.user.CreateUserRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.user.UpdateUserRequest;
 import com.elifintizam.projectManagement.business.dtos.responses.user.*;
+import com.elifintizam.projectManagement.business.rules.UserBusinessRules;
 import com.elifintizam.projectManagement.core.utilities.exceptions.types.BusinessException;
 import com.elifintizam.projectManagement.core.utilities.mapping.ModelMapperService;
 import com.elifintizam.projectManagement.dataAccess.abstracts.UserRepository;
@@ -21,9 +23,12 @@ public class UserManager implements UserService {
 
     private UserRepository userRepository;
     private ModelMapperService modelMapperService;
+    private UserBusinessRules userBusinessRules;
 
     @Override
     public CreateUserResponse addUser(CreateUserRequest createUserRequest) {
+
+        userBusinessRules.emailCanNotBeDuplicated(createUserRequest.getEmail());
 
         User user = modelMapperService.forRequest().map(createUserRequest, User.class);
         user.setCreatedDate(LocalDateTime.now());
@@ -47,14 +52,16 @@ public class UserManager implements UserService {
     @Override
     public void deleteUserById(int id) {
 
+        userBusinessRules.isUserExists(id);
         userRepository.deleteById(id);
     }
 
     @Override
     public UpdateUserResponse updateUserById(int id, UpdateUserRequest updateUserRequest) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("UserNotFound"));
+        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(UserMessages.UserNotFound));
 
+        userBusinessRules.emailCanNotBeDuplicated(updateUserRequest.getEmail());
         User updatedUser = modelMapperService.forRequest().map(updateUserRequest, User.class);
 
         user.setUpdatedDate(LocalDateTime.now());
@@ -71,7 +78,7 @@ public class UserManager implements UserService {
     @Override
     public GetUserByIdResponse getUserById(int id) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("UserNotFound"));
+        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(UserMessages.UserNotFound));
 
         GetUserByIdResponse response = modelMapperService.forResponse().map(user, GetUserByIdResponse.class);
         return response;
@@ -80,7 +87,8 @@ public class UserManager implements UserService {
     @Override
     public GetUserByEmailResponse getUserByEmail(String email) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("UserNotFound"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new BusinessException(UserMessages.UserNotFound));
+
         GetUserByEmailResponse response = modelMapperService.forResponse().map(user, GetUserByEmailResponse.class);
         return response;
     }
