@@ -7,6 +7,7 @@ import com.elifintizam.projectManagement.business.dtos.responses.project.CreateP
 import com.elifintizam.projectManagement.business.dtos.responses.project.GetAllProjectsResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.project.GetProjectByIdResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.project.UpdateProjectResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class ProjectsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateProjectResponse addProject(@RequestBody CreateProjectRequest createProjectRequest) {
+    public CreateProjectResponse addProject(@RequestBody @Valid CreateProjectRequest createProjectRequest) {
         return projectService.addProject(createProjectRequest);
 
     }
@@ -42,7 +43,7 @@ public class ProjectsController {
     @PutMapping("update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UpdateProjectResponse updateProjectById(@PathVariable int id,
-                                                   @RequestBody UpdateProjectRequest updateProjectRequest) {
+                                                   @RequestBody @Valid UpdateProjectRequest updateProjectRequest) {
         return projectService.updateProjectById(id, updateProjectRequest);
     }
 

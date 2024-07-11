@@ -4,6 +4,7 @@ import com.elifintizam.projectManagement.business.abstracts.UserService;
 import com.elifintizam.projectManagement.business.dtos.requests.user.CreateUserRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.user.UpdateUserRequest;
 import com.elifintizam.projectManagement.business.dtos.responses.user.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UsersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateUserResponse addUser(@RequestBody CreateUserRequest createUserRequest){
+    public CreateUserResponse addUser(@RequestBody @Valid CreateUserRequest createUserRequest){
         return userService.addUser(createUserRequest);
     }
 
@@ -37,7 +38,8 @@ public class UsersController {
 
     @PutMapping("update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UpdateUserResponse updateUserById(@PathVariable int id, @RequestBody UpdateUserRequest updateUserRequest) {
+    public UpdateUserResponse updateUserById(@PathVariable int id,
+                                             @RequestBody @Valid UpdateUserRequest updateUserRequest) {
         return userService.updateUserById(id, updateUserRequest);
     }
 

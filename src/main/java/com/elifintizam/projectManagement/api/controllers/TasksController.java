@@ -7,6 +7,7 @@ import com.elifintizam.projectManagement.business.dtos.responses.task.CreateTask
 import com.elifintizam.projectManagement.business.dtos.responses.task.GetAllTasksResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.task.GetTaskByIdResponse;
 import com.elifintizam.projectManagement.business.dtos.responses.task.UpdateTaskResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class TasksController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateTaskResponse addTask(@RequestBody CreateTaskRequest createTaskRequest) {
+    public CreateTaskResponse addTask(@RequestBody @Valid CreateTaskRequest createTaskRequest) {
         return taskService.addTask(createTaskRequest);
 
     }
@@ -42,7 +43,7 @@ public class TasksController {
     @PutMapping("update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public UpdateTaskResponse updateTaskById(@PathVariable int id,
-                                             @RequestBody UpdateTaskRequest updateTaskRequest) {
+                                             @RequestBody @Valid UpdateTaskRequest updateTaskRequest) {
         return taskService.updateTaskById(id, updateTaskRequest);
     }
 
