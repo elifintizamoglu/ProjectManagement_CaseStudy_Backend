@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class CreateTaskRequest {
 
-    @NotBlank(message = "Project id can not be empty.")
     @Positive(message = "Project id must be bigger than 0.")
     private int projectId;
 
@@ -24,6 +23,5 @@ public class CreateTaskRequest {
     @Size(min = 2, max = 500, message = "Task description must be between 2 and 500 characters.")
     private String description;
 
-    @NotBlank(message = "Status can not be empty.")
     private Status status;
 }

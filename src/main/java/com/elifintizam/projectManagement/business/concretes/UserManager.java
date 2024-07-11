@@ -4,6 +4,7 @@ import com.elifintizam.projectManagement.business.abstracts.UserService;
 import com.elifintizam.projectManagement.business.dtos.requests.user.CreateUserRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.user.UpdateUserRequest;
 import com.elifintizam.projectManagement.business.dtos.responses.user.*;
+import com.elifintizam.projectManagement.core.utilities.exceptions.types.BusinessException;
 import com.elifintizam.projectManagement.core.utilities.mapping.ModelMapperService;
 import com.elifintizam.projectManagement.dataAccess.abstracts.UserRepository;
 import com.elifintizam.projectManagement.entities.concretes.User;
@@ -70,7 +71,7 @@ public class UserManager implements UserService {
     @Override
     public GetUserByIdResponse getUserById(int id) {
 
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("UserNotFound"));
+        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException("UserNotFound"));
 
         GetUserByIdResponse response = modelMapperService.forResponse().map(user, GetUserByIdResponse.class);
         return response;
