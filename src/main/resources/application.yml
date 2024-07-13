@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/projectmanagementdb
+    username: postgres
+    password: # write your password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8080
+
+application:
+  security:
+    jwt:
+      secret-key: # fill here with secret-key
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
