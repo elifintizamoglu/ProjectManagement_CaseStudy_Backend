@@ -10,12 +10,13 @@ import com.elifintizam.projectManagement.business.dtos.responses.project.UpdateP
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/projects")
+@RequestMapping(path = "api/v1/projects", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class ProjectsController {
 

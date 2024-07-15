@@ -7,12 +7,13 @@ import com.elifintizam.projectManagement.business.dtos.responses.user.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/users")
+@RequestMapping(path = "api/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class UsersController {
 
@@ -20,7 +21,7 @@ public class UsersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateUserResponse addUser(@RequestBody @Valid CreateUserRequest createUserRequest){
+    public CreateUserResponse addUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         return userService.addUser(createUserRequest);
     }
 
@@ -51,7 +52,7 @@ public class UsersController {
 
     @GetMapping(path = "getByEmail/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public GetUserByEmailResponse getUserByEmail(@PathVariable String email){
+    public GetUserByEmailResponse getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 }

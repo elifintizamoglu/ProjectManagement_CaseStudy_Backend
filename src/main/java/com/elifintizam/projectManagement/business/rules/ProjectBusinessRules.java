@@ -29,7 +29,7 @@ public class ProjectBusinessRules {
 
     public void isDatesAppropriate(LocalDate startDate, LocalDate endDate) {
 
-        if(!startDate.isBefore(endDate)){
+        if(!(startDate.isBefore(endDate) || startDate.isEqual(endDate))){
             throw new BusinessException(ProjectMessages.DatesAreNotAppropriate);
         }
 
