@@ -2,10 +2,7 @@ package com.elifintizam.projectManagement.business.abstracts;
 
 import com.elifintizam.projectManagement.business.dtos.requests.task.CreateTaskRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.task.UpdateTaskRequest;
-import com.elifintizam.projectManagement.business.dtos.responses.task.CreateTaskResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.GetAllTasksResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.GetTaskByIdResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.UpdateTaskResponse;
+import com.elifintizam.projectManagement.business.dtos.responses.task.*;
 
 import java.util.List;
 
@@ -20,4 +17,6 @@ public interface TaskService {
     UpdateTaskResponse updateTaskById(int id, UpdateTaskRequest updateTaskRequest);
 
     GetTaskByIdResponse getTaskById(int id);
+
+    List<GetTasksByProjectIdResponse> getTasksByProjectId(int projectId);
 }

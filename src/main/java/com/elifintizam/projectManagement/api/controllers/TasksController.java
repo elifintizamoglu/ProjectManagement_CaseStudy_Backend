@@ -3,19 +3,17 @@ package com.elifintizam.projectManagement.api.controllers;
 import com.elifintizam.projectManagement.business.abstracts.TaskService;
 import com.elifintizam.projectManagement.business.dtos.requests.task.CreateTaskRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.task.UpdateTaskRequest;
-import com.elifintizam.projectManagement.business.dtos.responses.task.CreateTaskResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.GetAllTasksResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.GetTaskByIdResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.UpdateTaskResponse;
+import com.elifintizam.projectManagement.business.dtos.responses.task.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/tasks")
+@RequestMapping(path = "api/v1/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
 @AllArgsConstructor
 public class TasksController {
 
@@ -51,5 +49,11 @@ public class TasksController {
     @ResponseStatus(HttpStatus.OK)
     public GetTaskByIdResponse getTaskById(@PathVariable int id) {
         return taskService.getTaskById(id);
+    }
+
+    @GetMapping("getByProjectId/{projectId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GetTasksByProjectIdResponse> getTasksByProjectId(@PathVariable int projectId) {
+        return taskService.getTasksByProjectId(projectId);
     }
 }

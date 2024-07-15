@@ -4,10 +4,7 @@ import com.elifintizam.projectManagement.business.abstracts.TaskService;
 import com.elifintizam.projectManagement.business.constants.TaskMessages;
 import com.elifintizam.projectManagement.business.dtos.requests.task.CreateTaskRequest;
 import com.elifintizam.projectManagement.business.dtos.requests.task.UpdateTaskRequest;
-import com.elifintizam.projectManagement.business.dtos.responses.task.CreateTaskResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.GetAllTasksResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.GetTaskByIdResponse;
-import com.elifintizam.projectManagement.business.dtos.responses.task.UpdateTaskResponse;
+import com.elifintizam.projectManagement.business.dtos.responses.task.*;
 import com.elifintizam.projectManagement.business.rules.TaskBusinessRules;
 import com.elifintizam.projectManagement.core.utilities.exceptions.types.BusinessException;
 import com.elifintizam.projectManagement.core.utilities.mapping.ModelMapperService;
@@ -85,6 +82,16 @@ public class TaskManager implements TaskService {
         Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(TaskMessages.TaskNotFound));
 
         GetTaskByIdResponse response = modelMapperService.forResponse().map(task, GetTaskByIdResponse.class);
+        return response;
+    }
+
+    @Override
+    public List<GetTasksByProjectIdResponse> getTasksByProjectId(int projectId) {
+
+        List<Task> tasks = taskRepository.findByProjectId(projectId);
+
+        List<GetTasksByProjectIdResponse> response = tasks.stream()
+                .map(task -> modelMapperService.forResponse().map(task, GetTasksByProjectIdResponse.class)).collect(Collectors.toList());
         return response;
     }
 }
