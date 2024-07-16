@@ -15,10 +15,10 @@ public class TaskBusinessRules {
 
     TaskRepository taskRepository;
 
-    public void taskTitleCanNotBeDuplicated(String title, int projectId) {
+    public void taskTitleCanNotBeDuplicated(int taskId, String title, int projectId) {
 
         String trimmedTitle = title.trim();
-        Optional<Task> task = taskRepository.findByTitleAndProjectId(trimmedTitle, projectId);
+        Optional<Task> task = taskRepository.findByTitleAndProjectIdExcludingId(taskId, trimmedTitle, projectId);
 
         if (task.isPresent()) {
             throw new BusinessException(TaskMessages.TaskTitleAlreadyExists);

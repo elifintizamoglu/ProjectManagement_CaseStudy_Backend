@@ -28,7 +28,7 @@ public class TaskManager implements TaskService {
     @Override
     public CreateTaskResponse addTask(CreateTaskRequest request) {
 
-        businessRules.taskTitleCanNotBeDuplicated(request.getTitle(), request.getProjectId());
+        businessRules.taskTitleCanNotBeDuplicated(0, request.getTitle(), request.getProjectId());
 
         Task task = modelMapperService.forRequest().map(request, Task.class);
         task.setCreatedDate(LocalDateTime.now());
@@ -62,7 +62,7 @@ public class TaskManager implements TaskService {
 
         Task task = taskRepository.findById(id).orElseThrow(() -> new BusinessException(TaskMessages.TaskNotFound));
 
-        businessRules.taskTitleCanNotBeDuplicated(request.getTitle(), request.getProjectId());
+        businessRules.taskTitleCanNotBeDuplicated(id, request.getTitle(), request.getProjectId());
         Task updatedTask = modelMapperService.forRequest().map(request, Task.class);
 
         task.setProject(updatedTask.getProject());
