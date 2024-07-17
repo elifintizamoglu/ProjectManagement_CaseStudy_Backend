@@ -17,15 +17,16 @@ public class ProjectBusinessRules {
 
     ProjectRepository projectRepository;
 
-    public void projectNameCanNotBeDuplicated(String name) {
+    public void projectNameCanNotBeDuplicated(int id, String name) {
 
         String trimmedName = name.trim();
-        Optional<Project> project = projectRepository.findByName(trimmedName);
+        Optional<Project> project = projectRepository.findByNameExcludingId(id, trimmedName);
 
         if (project.isPresent()) {
             throw new BusinessException(ProjectMessages.ProjectNameAlreadyExists);
         }
     }
+
 
     public void isDatesAppropriate(LocalDate startDate, LocalDate endDate) {
 

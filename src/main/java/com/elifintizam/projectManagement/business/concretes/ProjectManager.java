@@ -31,7 +31,7 @@ public class ProjectManager implements ProjectService {
     @Override
     public CreateProjectResponse addProject(CreateProjectRequest request) {
 
-        businessRules.projectNameCanNotBeDuplicated(request.getName());
+        businessRules.projectNameCanNotBeDuplicated(0, request.getName());
         businessRules.isDatesAppropriate(request.getStartDate(), request.getEndDate());
 
         Project project = modelMapperService.forRequest().map(request, Project.class);
@@ -45,7 +45,7 @@ public class ProjectManager implements ProjectService {
     @Override
     public List<GetAllProjectsResponse> getAllProjects() {
 
-        List<Project> projects = projectRepository.findAll();
+        List<Project> projects = projectRepository.findAllOrderByNameAsc();
 
         List<GetAllProjectsResponse> response = projects.stream()
                 .map(project -> modelMapperService.forResponse()
@@ -65,7 +65,7 @@ public class ProjectManager implements ProjectService {
 
         Project project = projectRepository.findById(id).orElseThrow(() -> new BusinessException(ProjectMessages.ProjectNotFound));
 
-        businessRules.projectNameCanNotBeDuplicated(request.getName());
+        businessRules.projectNameCanNotBeDuplicated(id, request.getName());
         businessRules.isDatesAppropriate(request.getStartDate(), request.getEndDate());
 
         Project updatedProject = modelMapperService.forRequest().map(request, Project.class);
